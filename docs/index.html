@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FSAGA - Forgotten Saga Mod</title>
+<style>
+  body { font-family: sans-serif; background: #121020; color: #d7d2e6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+  .card { background: #1e1b32; border: 1px solid #41376e; border-radius: 12px; padding: 40px; max-width: 480px; text-align: center; }
+  h1 { color: #ffc332; margin: 0 0 8px; }
+  p { color: #7873a0; margin: 4px 0; }
+  a { color: #ffc332; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .btn { display: inline-block; margin-top: 24px; padding: 12px 32px; background: #aa8223; color: #121020; border-radius: 6px; font-weight: bold; }
+  .btn:hover { background: #d4a528; text-decoration: none; }
+  #ver, #date { color: #b8b3d0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>FSAGA</h1>
+  <p>Forgotten Saga Extension Mod</p>
+  <p id="ver">loading...</p>
+  <p id="date"></p>
+  <a id="dl" class="btn" href="#">Download</a>
+  <p style="margin-top:16px"><a id="rel" href="#">GitHub Releases</a></p>
+</div>
+<script>
+fetch('release-info.json').then(r=>r.json()).then(d=>{
+  if(d.version&&d.version!=='0.0.0'){
+    document.getElementById('ver').textContent='v'+d.version;
+    document.getElementById('date').textContent=d.date;
+    document.getElementById('dl').href=d.download_url;
+    document.getElementById('rel').href=d.release_url;
+  } else {
+    document.getElementById('ver').textContent='No release yet';
+    document.getElementById('dl').style.display='none';
+  }
+}).catch(()=>{document.getElementById('ver').textContent='No release yet';});
+</script>
+</body>
+</html>
