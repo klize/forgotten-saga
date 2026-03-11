@@ -34,7 +34,7 @@ export default function App() {
       {/* Background: blurred cover layer fills edges, sharp contain layer on top */}
       <div className="fixed inset-0 bg-dark-bg">
         <div
-          className="absolute inset-[-20px] bg-cover bg-center blur-xl scale-110"
+          className="absolute inset-[-20px] bg-cover bg-center blur-md scale-110"
           style={{ backgroundImage: `url('./assets/logo/main_bg_1.webp')` }}
         />
         <div
@@ -55,7 +55,8 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 text-center py-6 text-muted text-sm">
+      <footer className="relative z-10 text-center py-6 text-muted text-sm space-y-1">
+        <p>본 패치는 어떠한 수익도 창출하지 않으며, 포가튼사가의 모든 저작권은 손노리에게 있습니다.</p>
         <p>Phantagram &middot; FSAGA Extension Mod</p>
       </footer>
 

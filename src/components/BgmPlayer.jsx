@@ -3,30 +3,35 @@ import { useState, useRef, useEffect } from 'react'
 export default function BgmPlayer() {
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const startedRef = useRef(false)
+  const btnRef = useRef(null)
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
     audio.volume = 0.15
     audio.loop = true
+  }, [])
 
-    const startOnClick = () => {
-      if (startedRef.current) return
-      startedRef.current = true
+  // Auto-start on first user interaction anywhere on the page
+  // (except the BGM button itself — that's handled by toggle)
+  useEffect(() => {
+    let started = false
+    const start = (e) => {
+      if (started) return
+      if (btnRef.current && btnRef.current.contains(e.target)) return
+      const audio = audioRef.current
+      if (!audio) return
+      started = true
       audio.play().then(() => setIsPlaying(true)).catch(() => {})
-      document.removeEventListener('click', startOnClick)
-      document.removeEventListener('keydown', startOnClick)
-      document.removeEventListener('touchstart', startOnClick)
+      cleanup()
     }
-    document.addEventListener('click', startOnClick)
-    document.addEventListener('keydown', startOnClick)
-    document.addEventListener('touchstart', startOnClick)
-    return () => {
-      document.removeEventListener('click', startOnClick)
-      document.removeEventListener('keydown', startOnClick)
-      document.removeEventListener('touchstart', startOnClick)
+    const cleanup = () => {
+      document.removeEventListener('click', start, true)
+      document.removeEventListener('keydown', start, true)
     }
+    document.addEventListener('click', start, true)
+    document.addEventListener('keydown', start, true)
+    return cleanup
   }, [])
 
   const toggle = () => {
@@ -44,8 +49,9 @@ export default function BgmPlayer() {
     <div className="fixed bottom-4 right-4 z-40">
       <audio ref={audioRef} src="./assets/bgm.mp3" preload="auto" />
       <button
+        ref={btnRef}
         onClick={toggle}
-        className="w-10 h-10 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm border border-gold-dark/50 rounded-full text-lg hover:border-gold hover:bg-[rgba(0,0,0,0.7)] transition-all cursor-pointer"
+        className="w-10 h-10 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm border border-white/30 rounded-full text-lg hover:border-white/60 hover:bg-white/10 transition-all cursor-pointer"
         title={isPlaying ? 'BGM 끄기' : 'BGM 켜기'}
       >
         {isPlaying ? '🔊' : '🔇'}

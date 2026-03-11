@@ -20,6 +20,8 @@ ASSETS_DIR = os.path.join(SCRIPT_DIR, '..', 'docs', 'assets', 'logo')
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', 'public', 'assets', 'titles')
 
 GOLD = (0xFF, 0xC3, 0x32, 0xFF)
+WHITE = (0xFF, 0xFF, 0xFF, 0xFF)
+BLUE = (0x83, 0x9B, 0xCB, 0xFF)
 TRANSPARENT = (0, 0, 0, 0)
 
 
@@ -58,8 +60,8 @@ def load_korean_font(path):
 #   1 = bottom ㅗ-type (ㅗㅘㅙㅚㅛ)
 #   2 = bottom ㅜ-type (ㅜㅝㅞㅟㅠ)
 #   3 = bottom ㅡ-type (ㅡㅢ)
-# ㅡ(18),ㅢ(19) are bottom vowels like ㅗ → category 1 (wide cho on top)
-JUNG_CAT = [0,0,0,0, 0,0,0,0, 1,1,1,1,1, 2,2,2,2,2, 1,1, 0]
+# ㅡ(18),ㅢ(19): cat=2 gives wide cho + separated ㅡ stroke
+JUNG_CAT = [0,0,0,0, 0,0,0,0, 1,1,1,1,1, 2,2,2,2,2, 2,2, 0]
 
 CHO_BASE  = 0    # 8 groups x 20
 JUNG_BASE = 160  # 4 groups x 22
@@ -162,10 +164,11 @@ def main():
     kfont = load_korean_font(os.path.join(ASSETS_DIR, 'h04.fnt'))
 
     for name, text in TITLES:
-        img = render_text(text, afont, kfont)
-        path = os.path.join(OUTPUT_DIR, f'{name}.png')
-        img.save(path)
-        print(f'  {name:20s}  {text:10s}  {img.width:3d}x{img.height} -> {os.path.basename(path)}')
+        for color, suffix in [(WHITE, '')]:
+            img = render_text(text, afont, kfont, color=color)
+            path = os.path.join(OUTPUT_DIR, f'{name}{suffix}.png')
+            img.save(path)
+            print(f'  {name}{suffix:3s}  {text:10s}  {img.width:3d}x{img.height} -> {os.path.basename(path)}')
 
     print('Done!')
 

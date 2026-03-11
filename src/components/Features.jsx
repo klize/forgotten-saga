@@ -1,52 +1,69 @@
+import { useState, useEffect } from 'react'
 import GameBox from './GameBox'
-
-const FEATURES = [
-  {
-    title: '전투 시스템 확장',
-    description: '창 관통 공격, 크리티컬 마법 시스템, 원소 속성 데미지, 홀리 실드 등 전투의 깊이를 더합니다.',
-  },
-  {
-    title: '매력 마법 (Charm)',
-    description: '적 유닛을 아군으로 전환하는 매력 마법을 새롭게 구현했습니다.',
-  },
-  {
-    title: '미니맵 오버레이',
-    description: 'M키로 토글하는 미니맵 오버레이. 현재 맵과 플레이어 위치를 실시간으로 표시합니다.',
-  },
-  {
-    title: '스탯 오버레이',
-    description: '캐릭터의 상세 능력치를 인게임에서 바로 확인할 수 있습니다.',
-  },
-  {
-    title: '이벤트 오버레이',
-    description: 'E키로 현재 맵의 이벤트 목록을 확인. 퀘스트 진행 상황을 놓치지 마세요.',
-  },
-  {
-    title: '풀스크린 스케일러',
-    description: '고해상도 모니터에서도 게임을 풀스크린으로 즐길 수 있는 DPI 인식 스케일러.',
-  },
-  {
-    title: '이펙트 패치',
-    description: '원소 속성별 시각 효과를 추가하여 전투를 더욱 역동적으로 만듭니다.',
-  },
-  {
-    title: 'FSAGA Loader',
-    description: '간편한 원클릭 실행. 자동 업데이트 확인으로 항상 최신 버전을 유지합니다.',
-  },
-]
+import { RichText } from './RichText'
 
 export default function Features() {
+  const [features, setFeatures] = useState([])
+  const [openCards, setOpenCards] = useState(new Set())
+
+  useEffect(() => {
+    fetch('./features.json')
+      .then(r => r.json())
+      .then(setFeatures)
+      .catch(() => {})
+  }, [])
+
+  const toggle = (title) => {
+    setOpenCards((prev) => {
+      const next = new Set(prev)
+      if (next.has(title)) next.delete(title)
+      else next.add(title)
+      return next
+    })
+  }
+
+  if (features.length === 0) {
+    return <p className="text-white/40 text-center py-8">기능 목록을 불러오는 중...</p>
+  }
+
   return (
     <div className="grid grid-cols-2 gap-5">
-      {FEATURES.map((feature) => (
-        <GameBox
-          key={feature.title}
-          className="p-6 hover:shadow-[0_0_16px_rgba(200,168,78,0.1)] transition-all duration-200"
-        >
-          <h3 className="text-gold text-base font-semibold mb-3">{feature.title}</h3>
-          <p className="text-white/50 text-sm leading-loose">{feature.description}</p>
-        </GameBox>
-      ))}
+      {features.map((feature) => {
+        const isOpen = openCards.has(feature.title)
+        const hasDetail = feature.detail && feature.detail.length > 0
+        return (
+          <GameBox
+            key={feature.title}
+            className={`group p-6 transition-all duration-200 ${hasDetail ? 'cursor-pointer' : ''}`}
+            onClick={hasDetail ? () => toggle(feature.title) : undefined}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <h3 className={`text-white text-base font-semibold mb-1 ${hasDetail ? 'group-hover:text-hi transition-colors' : ''}`}>{feature.title}</h3>
+              {hasDetail && (
+                <span
+                  className="text-white/30 text-xs mt-1 transition-transform duration-200 shrink-0"
+                  style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                >
+                  ▶
+                </span>
+              )}
+            </div>
+            {feature.subtitle && (
+              <p className="text-white text-xs font-mono mb-3">{feature.subtitle}</p>
+            )}
+            <p className="text-white text-sm leading-loose">{feature.description}</p>
+            {isOpen && (
+              <ul className="mt-4 pt-3 border-t border-white/10 space-y-2">
+                {feature.detail.map((item, i) => (
+                  <li key={i} className="text-white text-sm leading-relaxed relative pl-4 before:content-['·'] before:absolute before:left-0 before:text-white/60">
+                    <RichText text={item} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </GameBox>
+        )
+      })}
     </div>
   )
 }
