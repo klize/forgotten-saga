@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-bg: #121020;
+  --color-dark-card: #1e1b32;
+  --color-dark-border: #41376e;
+  --color-gold: #ffc332;
+  --color-gold-dark: #aa8223;
+  --color-gold-hover: #d4a528;
+  --color-muted: #7873a0;
+  --color-text: #d7d2e6;
+  --color-text-bright: #b8b3d0;
+  --font-cinzel: 'Cinzel', serif;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--color-dark-bg);
+    color: var(--color-text);
+    overflow-x: hidden;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-dark-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-border);
+  border-radius: 3px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Game Box — 9-slice gold frame */
+.game-box {
+  --gb-scale: 2;
+  --gb-corner: calc(16px * var(--gb-scale));
+  --gb-edge: calc(3px * var(--gb-scale));
+  position: relative;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.gb-c, .gb-eh, .gb-ev {
+  position: absolute;
+  pointer-events: none;
+  image-rendering: pixelated;
+  z-index: 2;
+}
+
+.gb-c {
+  width: var(--gb-corner);
+  height: var(--gb-corner);
+}
+
+.gb-tl { top: 0; left: 0; }
+.gb-tr { top: 0; right: 0; }
+.gb-bl { bottom: 0; left: 0; }
+.gb-br { bottom: 0; right: 0; }
+
+.gb-eh {
+  left: var(--gb-corner);
+  right: var(--gb-corner);
+  height: var(--gb-edge);
+  background-size: var(--gb-corner) var(--gb-edge);
+  background-repeat: repeat-x;
+}
+
+.gb-et { top: 0; }
+.gb-eb { bottom: 0; }
+
+.gb-ev {
+  top: var(--gb-corner);
+  bottom: var(--gb-corner);
+  width: var(--gb-edge);
+  background-size: var(--gb-edge) var(--gb-corner);
+  background-repeat: repeat-y;
+}
+
+.gb-el { left: 0; }
+.gb-er { right: 0; }
+
+/* Game Button — gold border for small interactive elements */
+.game-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--color-gold-dark);
+  color: var(--color-gold-dark);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.game-btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(0, 0, 0, 0.75);
+}
