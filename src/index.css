@@ -7,6 +7,7 @@
   --color-gold: #ffc332;
   --color-gold-dark: #aa8223;
   --color-gold-hover: #d4a528;
+  --color-hi: #839BCB;
   --color-muted: #7873a0;
   --color-text: #d7d2e6;
   --color-text-bright: #b8b3d0;
@@ -112,4 +113,20 @@
   border-color: var(--color-gold);
   color: var(--color-gold);
   background: rgba(0, 0, 0, 0.75);
+}
+
+/* Bitmap title: mask-image for exact color control */
+.title-icon {
+  display: inline-block;
+  background-color: white;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  image-rendering: pixelated;
+  transition: background-color 0.2s;
+}
+
+.group:hover .title-icon {
+  background-color: var(--color-hi);
 }
