@@ -1,0 +1,6 @@
+node_modules/
+docs/
+.venv/
+__pycache__/
+*.pyc
+test_nung.png
