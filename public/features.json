@@ -1,11 +1,10 @@
 [
   {
     "title": "전투 시스템 확장",
-    "subtitle": "battle_system.dll + melee_critical.dll",
-    "description": "미구현 마법 추가, 창 관통 공격, 크리티컬 마법 시스템, 원소 속성 데미지, 다중 속성, 무기 이펙트 패치.",
+    "subtitle": "battle_system.dll + motion_critical.dll",
+    "description": "미구현 마법 추가, 창 관통 공격, 원소 속성 데미지, 다중 속성, 무기 이펙트 패치.",
     "detail": [
-      "melee_critical.dll은 항상 같은 경로에 위치",
-      "ITEM_CRITICAL.txt — 크리티컬 시 마법 발동 설정 (기본 OFF)",
+      "motion_critical.dll은 항상 같은 경로에 위치",
       "MOTION_CRITICAL.txt — 크리티컬 전용 모션 설정 (기본 OFF)",
       "MAGIC.PAT — 챰 마법 데이터 (게임 폴더에 덮어쓰기)",
       "ITEM.PAT — 속성 무기 데이터 (게임 폴더에 덮어쓰기)",
