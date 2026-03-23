@@ -16,9 +16,11 @@ function TitleIcon({ src, w, h = 16, className = '' }) {
   )
 }
 
-export default function Hero({ releaseInfo, onOpenOverlay }) {
+export default function Hero({ releaseInfo, betaReleaseInfo, onOpenOverlay }) {
   const version = releaseInfo?.version
   const downloadUrl = releaseInfo?.download_url
+  const betaVersion = betaReleaseInfo?.version
+  const betaDownloadUrl = betaReleaseInfo?.download_url
 
   return (
     <div className="w-full max-w-md text-center flex flex-col items-center gap-3">
@@ -35,6 +37,19 @@ export default function Hero({ releaseInfo, onOpenOverlay }) {
         </GameBox>
       ) : (
         <p className="text-white/50">릴리스 정보를 불러오는 중...</p>
+      )}
+
+      {/* Beta Download Button */}
+      {betaVersion && (
+        <GameBox className="group w-full transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+          <a
+            href={betaDownloadUrl}
+            className="block py-2.5 px-6 text-center"
+          >
+            <span className="block text-xs text-white/40 mb-0.5">BETA</span>
+            <span className="block font-bold text-sm text-white/60 group-hover:text-amber-300 transition-colors">v{betaVersion}</span>
+          </a>
+        </GameBox>
       )}
 
       {/* Navigation Buttons */}

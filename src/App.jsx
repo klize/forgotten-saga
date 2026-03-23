@@ -8,6 +8,7 @@ import BgmPlayer from './components/BgmPlayer'
 
 export default function App() {
   const [releaseInfo, setReleaseInfo] = useState(null)
+  const [betaReleaseInfo, setBetaReleaseInfo] = useState(null)
   const [activeOverlay, setActiveOverlay] = useState(null)
 
   useEffect(() => {
@@ -16,6 +17,17 @@ export default function App() {
       .then(data => {
         if (data.version && data.version !== '0.0.0') {
           setReleaseInfo(data)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    fetch('./beta-release-info.json')
+      .then(r => r.json())
+      .then(data => {
+        if (data.version && data.version !== '0.0.0') {
+          setBetaReleaseInfo(data)
         }
       })
       .catch(() => {})
@@ -49,6 +61,7 @@ export default function App() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-8">
         <Hero
           releaseInfo={releaseInfo}
+          betaReleaseInfo={betaReleaseInfo}
           onOpenOverlay={setActiveOverlay}
         />
         <BgmPlayer />
