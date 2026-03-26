@@ -200,3 +200,28 @@
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   margin: 1rem 0;
 }
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+.markdown-body th {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.markdown-body td {
+  color: var(--color-text);
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.markdown-body tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}

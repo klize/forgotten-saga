@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import GameBox from './GameBox'
 import Overlay from './Overlay'
 
@@ -53,7 +54,7 @@ export default function PatchNotes({ releaseInfo }) {
 
       <Overlay isOpen={!!selectedNote} onClose={closeNote} title={selectedNote?.title || ''}>
         <div className="markdown-body">
-          <ReactMarkdown>{mdContent}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{mdContent}</ReactMarkdown>
         </div>
       </Overlay>
     </>
