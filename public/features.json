@@ -42,19 +42,6 @@
     ]
   },
   {
-    "title": "동료 외형 변경",
-    "subtitle": "char_ext.dll + hook_mob_spb.dll",
-    "description": "새 게임 동료 생성시 외형 선택, 각종 NPC 외형 변경.",
-    "detail": [
-      "Loader에서 char_ext + hook_mob_spb 둘 다 ON",
-      "CHAR_EXT.txt에서 외형 후보 설정",
-      "# — 생성 시 선택형 (예: #히로 히로인 아델바르트)",
-      "! — 고정 오버라이드 (예: !아스카리아 아세로라)",
-      "선택한 외형은 세이브/로드 시에도 유지",
-      "자세한 사항은 [포가튼사가 카페](https://cafe.naver.com/f-e/cafes/12767662/articles/32667?boardtype=L&menuid=35&referrerAllArticles=false) 참조."
-    ]
-  },
-  {
     "title": "FSAGA Loader",
     "subtitle": "FSAGA_Loader.exe",
     "description": "각종 패치를 적용할 수 있도록 합니다.",
