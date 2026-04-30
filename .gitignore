@@ -4,3 +4,4 @@ docs/
 __pycache__/
 *.pyc
 test_nung.png
+.claude/
