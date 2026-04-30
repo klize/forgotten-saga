@@ -30,6 +30,11 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      # variants/ 는 vite entry/public 어느 쪽에도 잡히지 않아 빌드 산출물에서 누락됨.
+      # 새 index.html 이 <script src="variants/*.jsx"> 로 직접 로드하므로 docs/ 에 복사.
+      # 자세한 배경: TODO_UI_CHANGES.md (2단계: A 체제 정착)
+      - run: cp -r variants docs/
+
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
