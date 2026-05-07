@@ -91,7 +91,7 @@ function GameFrame({ children, style, padding = 0, scale = 2 }) {
   );
 }
 
-function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition = 'inline-bar' }) {
+function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition = 'inline-bar', frameVariant = 'gold' }) {
   const [view, setView] = React.useState('home');
 
   // Theme palettes — applied as CSS vars on the root container
@@ -181,11 +181,20 @@ function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition
       overflow: 'hidden',
       ...themeVars,
     }}>
-      {/* BG */}
+      {/* BG — blurred cover layer to fill edges */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: "url('./assets/logo/main_bg_3.webp')",
-        backgroundSize: 'cover', backgroundPosition: 'center 30%',
+        backgroundImage: "url('./assets/logo/main_bg_3_ext2.png')",
+        backgroundSize: 'cover', backgroundPosition: 'center',
+        filter: view === 'home' ? 'saturate(0.9) brightness(0.55) blur(18px)' : 'saturate(0.5) brightness(0.35) blur(20px)',
+        transform: 'scale(1.08)',
+        transition: 'filter 400ms',
+      }} />
+      {/* BG — full image (cover, fill viewport) on top */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: "url('./assets/logo/main_bg_3_ext2.png')",
+        backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat',
         filter: view === 'home' ? 'saturate(1) brightness(1)' : 'saturate(0.6) brightness(0.45) blur(2px)',
         transition: 'filter 400ms',
       }} />
@@ -258,6 +267,24 @@ function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition
                 <span style={{ opacity: 0.7 }}>↓</span>
               </a>
             )}
+            {/* External: cafe link */}
+            <a
+              href="https://cafe.naver.com/fsaga"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '6px 14px',
+                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                fontSize: 11.5, letterSpacing: '0.22em', textTransform: 'uppercase',
+                color: 'var(--m-text-bright)', textDecoration: 'none',
+                opacity: 0.85,
+                textShadow: '0 1px 2px rgba(0,0,0,0.85)',
+                borderBottom: '1px solid transparent',
+                transition: 'color 180ms, opacity 180ms',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--m-hover)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.color = 'var(--m-text-bright)'; }}
+            >Cafe</a>
             {/* Section nav */}
             {[
               { id: 'patchnotes', label: 'Patch Notes' },
@@ -288,13 +315,14 @@ function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition
         </div>
 
         {/* Body */}
-        {view === 'home' && <MonolithHome release={release} beta={beta} betaPosition={betaPosition} onNav={setView} theme={theme} />}
+        {view === 'home' && <MonolithHome release={release} beta={beta} betaPosition={betaPosition} onNav={setView} theme={theme} frameVariant={frameVariant} />}
         {view === 'patchnotes' && <MonolithPatchNotes release={release} />}
         {view === 'features' && <MonolithFeatures />}
         {view === 'install' && <MonolithInstall />}
 
-        {/* Footer */}
+        {/* Footer — pinned to last grid row regardless of body content (home view uses fixed positioning so body row has no grid items) */}
         <div style={{
+          gridRowStart: -1,
           marginTop: 16,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24,
           fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
@@ -323,46 +351,83 @@ function MonolithVariant({ release, beta, theme = 'parchment-gold', betaPosition
   );
 }
 
-function MonolithHome({ release, beta, betaPosition, onNav, theme, view }) {
+function MonolithHome({ release, beta, betaPosition, onNav, theme, view, frameVariant = 'gold' }) {
   const [hovered, setHovered] = React.useState(null);
   const [betaHover, setBetaHover] = React.useState(false);
   const isGameUI = theme === 'game-ui';
 
+  // Frame variant configs — each defines how to render the download card chrome
+  const FRAME_DIRS = {
+    gold: './assets/logo/wframe',
+    'blue-9slice': './assets/logo/frames/a-blue',
+    'plate-load': './assets/logo/frames/b-plate/00_320x240.png',
+    'plate-market': './assets/logo/frames/e-market/00_303x237.png',
+  };
+  const is9slice = frameVariant === 'gold' || frameVariant === 'blue-9slice';
+  const isPlate = frameVariant === 'plate-load' || frameVariant === 'plate-market';
+  const wframeDir = FRAME_DIRS[frameVariant] || FRAME_DIRS.gold;
+  const plateSrc = isPlate ? FRAME_DIRS[frameVariant] : null;
+  const plateDims = frameVariant === 'plate-load' ? { w: 320, h: 240 }
+                  : frameVariant === 'plate-market' ? { w: 303, h: 237 }
+                  : null;
+
+  // Wordmark + download are positioned in viewport coords with clamps so they never
+  // crop off-screen. At 16:9~4:3 viewports they sit on top of the characters; at
+  // extreme aspect ratios they drift slightly but stay visible.
   return (
     <>
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 56,
-      }}>
-        <img
-          src="./assets/logo/wordmark.png?v=12"
-          alt="Forgotten Saga"
-          style={{
-            width: 'min(48vw, 560px)',
-            maxHeight: '52vh',
-            objectFit: 'contain',
-            filter: 'drop-shadow(0 4px 24px rgba(0,0,0,0.6))',
-            opacity: 1,
-          }}
-        />
+      {/* Wordmark — above the female character's head at 16:9 (left ~22vw, top ~13vh) */}
+      <img
+        src="./assets/logo/wordmark.png?v=12"
+        alt="Forgotten Saga"
+        style={{
+          position: 'fixed',
+          top: 'clamp(56px, 16vh, 200px)',
+          left: 'clamp(20vw, 38vw, 50vw)',
+          transform: 'translateX(-50%)',
+          width: 'min(26vw, 380px)',
+          maxHeight: '20vh',
+          objectFit: 'contain',
+          filter: 'drop-shadow(0 4px 24px rgba(0,0,0,0.75))',
+          pointerEvents: 'none',
+          zIndex: 3,
+        }}
+      />
 
+      {/* Download card — over the male character's knee at 16:9 (left ~52vw, top ~72vh) */}
+      <div style={{
+        position: 'fixed',
+        top: 'clamp(70vh, 82vh, calc(100vh - 80px))',
+        left: 'clamp(45vw, 52vw, 62vw)',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 3,
+      }}>
         {/* Single Download card with optional beta sub */}
         <div style={{
           position: 'relative',
-          background: isGameUI ? 'rgba(0,0,0,0.88)' : 'var(--m-menu-bg)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          padding: '22px 40px 18px',
-          minWidth: 280,
+          background: isPlate ? 'transparent' : (isGameUI ? 'rgba(0,0,0,0.88)' : 'var(--m-menu-bg)'),
+          backdropFilter: isPlate ? 'none' : 'blur(8px)',
+          WebkitBackdropFilter: isPlate ? 'none' : 'blur(8px)',
+          padding: isPlate ? `${plateDims.h * 0.42}px ${plateDims.w * 0.18}px ${plateDims.h * 0.18}px` : '22px 40px 18px',
+          width: isPlate ? plateDims.w : undefined,
+          minWidth: isPlate ? undefined : 280,
+          backgroundImage: isPlate ? `url('${plateSrc}')` : undefined,
+          backgroundSize: isPlate ? '100% 100%' : undefined,
+          backgroundRepeat: isPlate ? 'no-repeat' : undefined,
+          imageRendering: isPlate ? 'pixelated' : undefined,
+          filter: isPlate ? 'drop-shadow(0 8px 24px rgba(0,0,0,0.55))' : undefined,
         }}>
-          {/* 9-slice gold frame */}
-          <img src="./assets/logo/wframe/0.png" alt="" draggable={false} style={{ position: 'absolute', top: 0, left: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <img src="./assets/logo/wframe/5.png" alt="" draggable={false} style={{ position: 'absolute', top: 0, right: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <img src="./assets/logo/wframe/6.png" alt="" draggable={false} style={{ position: 'absolute', bottom: 0, left: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <img src="./assets/logo/wframe/7.png" alt="" draggable={false} style={{ position: 'absolute', bottom: 0, right: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', top: 0, left: 32, right: 32, height: 6, backgroundImage: "url('./assets/logo/wframe/1.png')", backgroundSize: '32px 6px', backgroundRepeat: 'repeat-x', imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', bottom: 0, left: 32, right: 32, height: 6, backgroundImage: "url('./assets/logo/wframe/1.png')", backgroundSize: '32px 6px', backgroundRepeat: 'repeat-x', imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', left: 0, top: 32, bottom: 32, width: 6, backgroundImage: "url('./assets/logo/wframe/4.png')", backgroundSize: '6px 32px', backgroundRepeat: 'repeat-y', imageRendering: 'pixelated', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', right: 0, top: 32, bottom: 32, width: 6, backgroundImage: "url('./assets/logo/wframe/3.png')", backgroundSize: '6px 32px', backgroundRepeat: 'repeat-y', imageRendering: 'pixelated', pointerEvents: 'none' }} />
+          {/* 9-slice frame (gold or blue) */}
+          {is9slice && <>
+            <img src={`${wframeDir}/0.png`} alt="" draggable={false} style={{ position: 'absolute', top: 0, left: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <img src={`${wframeDir}/5.png`} alt="" draggable={false} style={{ position: 'absolute', top: 0, right: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <img src={`${wframeDir}/6.png`} alt="" draggable={false} style={{ position: 'absolute', bottom: 0, left: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <img src={`${wframeDir}/7.png`} alt="" draggable={false} style={{ position: 'absolute', bottom: 0, right: 0, width: 32, height: 32, imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: 0, left: 32, right: 32, height: 6, backgroundImage: `url('${wframeDir}/1.png')`, backgroundSize: '32px 6px', backgroundRepeat: 'repeat-x', imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: 0, left: 32, right: 32, height: 6, backgroundImage: `url('${wframeDir}/${frameVariant === 'blue-9slice' ? '2' : '1'}.png')`, backgroundSize: '32px 6px', backgroundRepeat: 'repeat-x', imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', left: 0, top: 32, bottom: 32, width: 6, backgroundImage: `url('${wframeDir}/4.png')`, backgroundSize: '6px 32px', backgroundRepeat: 'repeat-y', imageRendering: 'pixelated', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', right: 0, top: 32, bottom: 32, width: 6, backgroundImage: `url('${wframeDir}/3.png')`, backgroundSize: '6px 32px', backgroundRepeat: 'repeat-y', imageRendering: 'pixelated', pointerEvents: 'none' }} />
+          </>}
 
           {/* Main download */}
           <a

@@ -46,20 +46,13 @@
 
   <script type="text/babel" src="variants/markdown.jsx"></script>
   <script type="text/babel" src="variants/bgm-player.jsx"></script>
-  <script type="text/babel" src="variants/tweaks-panel.jsx"></script>
   <script type="text/babel" src="variants/monolith.jsx"></script>
 
   <script type="text/babel">
-    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-      "theme": "solid-card",
-      "betaPosition": "download-cell-sub"
-    }/*EDITMODE-END*/;
-
     function FSAGAApp() {
       const [release, setRelease] = React.useState(null);
       const [beta, setBeta] = React.useState(null);
       const [ready, setReady] = React.useState(false);
-      const [t, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
 
       React.useEffect(() => {
         const get = (path) => fetch(path).then(r => r.ok ? r.json() : Promise.reject()).catch(() => null);
@@ -82,46 +75,16 @@
       if (!ready || !window.MonolithVariant) {
         return <div className="fsaga-boot">Loading · F · S · A · G · A</div>;
       }
-      const TP = window.TweaksPanel, TS = window.TweakSection, TSel = window.TweakSelect;
       return (
         <>
           <window.MonolithVariant
             release={release}
             beta={beta}
-            theme={t.theme}
-            betaPosition={t.betaPosition}
+            theme="solid-card"
+            betaPosition="download-cell-sub"
+            frameVariant="gold"
           />
           {window.BgmPlayer && <window.BgmPlayer />}
-          {TP && (
-            <TP title="Tweaks">
-              <TS label="Color theme" />
-              <TSel
-                label="Theme"
-                value={t.theme}
-                options={[
-                  { value: 'parchment-gold', label: 'Parchment + Gold' },
-                  { value: 'inkblue-gold', label: 'Inkblue + Gold' },
-                  { value: 'wine', label: 'Wine + Gold' },
-                  { value: 'silver', label: 'Silver mono' },
-                  { value: 'solid-card', label: 'Solid card menu' },
-                ]}
-                onChange={(v) => setTweak('theme', v)}
-              />
-              <TS label="Beta channel position" />
-              <TSel
-                label="Position"
-                value={t.betaPosition}
-                options={[
-                  { value: 'inline-bar', label: '① Above Download cell' },
-                  { value: 'topbar-badge', label: '② Top bar badge' },
-                  { value: 'download-cell-sub', label: '③ Inside Download cell' },
-                  { value: 'wordmark-row', label: '④ Wordmark row (stable + beta)' },
-                  { value: 'footer', label: '⑤ Footer secondary link' },
-                ]}
-                onChange={(v) => setTweak('betaPosition', v)}
-              />
-            </TP>
-          )}
         </>
       );
     }
@@ -133,7 +96,7 @@
 
     let tries = 0;
     function waitAndMount() {
-      if (window.MonolithVariant && window.FsagaMarkdown && window.BgmPlayer && window.useTweaks) {
+      if (window.MonolithVariant && window.FsagaMarkdown && window.BgmPlayer) {
         mount();
       } else if (tries++ < 80) {
         setTimeout(waitAndMount, 50);
