@@ -1,6 +1,9 @@
 {
-  "version": "0.0.0",
-  "date": "",
-  "download_url": "",
-  "release_url": ""
+  "version": "26.7.17.0130-beta.1",
+  "game_version": "v26.7.17.0130-beta.1",
+  "loader_version": "v26.7.16.0000",
+  "date": "2026-07-16",
+  "download_url": "https://github.com/klize/forgotten-saga/releases/download/v26.7.17.0130-beta.1/FSAGA_v26.7.17.0130-beta.1.zip",
+  "download_sha256": "2a698febf61be2ab100ec54746be3bfbda3accdc9f34cef3097eb0183e8f541d",
+  "release_url": "https://github.com/klize/forgotten-saga/releases/tag/v26.7.17.0130-beta.1"
 }
