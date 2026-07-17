@@ -1,6 +1,12 @@
 {
-  "version": "26.5.17.2207.2",
-  "date": "2026-06-25",
-  "download_url": "https://github.com/klize/forgotten-saga/releases/download/v26.5.17.2207.2/FSAGA_v26.5.17.2207.2.zip",
-  "release_url": "https://github.com/klize/forgotten-saga/releases/tag/v26.5.17.2207.2"
+  "version": "26.7.17.0130",
+  "game_version": "v26.7.17.0130",
+  "loader_version": "v26.7.17.0130",
+  "date": "2026-07-17",
+  "download_url": "https://github.com/klize/forgotten-saga/releases/download/v26.7.17.0130/FSAGA_v26.7.17.0130.zip",
+  "download_sha256": "f75f6507c67d995c55ccf0d040ee2ef95e1fb0b133e67b729d1e44d7c5f88618",
+  "extension_dll_sha256": "b2bc25208df85d8eab90c9b72c4c9f3c3a0bfd24a191ded319a6ff55cabfa2df",
+  "hook_resource_dll_sha256": "2e1201f3326ff26cbef44157405edc0656af0f09c9a0cdda63224a8eca0100c0",
+  "inventory_expansion_dll_sha256": "414aeda1bd40a46223a82179b42021c7fa80c0db486c0da65cb98a60c1b4f71a",
+  "release_url": "https://github.com/klize/forgotten-saga/releases/tag/v26.7.17.0130"
 }
