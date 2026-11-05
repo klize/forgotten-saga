@@ -1,12 +1,12 @@
 {
-  "version": "26.10.14.0101-beta.3",
-  "game_version": "v26.10.14.0101-beta.3",
-  "loader_version": "v26.10.14.0101-beta.3",
-  "date": "2026-11-04",
-  "download_url": "https://github.com/klize/forgotten-saga/releases/download/v26.10.14.0101-beta.3/FSAGA_v26.10.14.0101-beta.3.zip",
-  "download_sha256": "d897998eee3176987f0c06e1d652efac800916062268bb48364460677b562582",
-  "extension_dll_sha256": "0e638c6f026a892959a31c5c07221b8032d1a144d300926ad270b5db525ce94f",
-  "hook_resource_dll_sha256": "af2bbe9d93f8c52609424bc99cd116545e7e18194d3e6aa409d7217c217fea4b",
-  "inventory_expansion_dll_sha256": "85c057a953e8ab2a848285a24a28ebba3216c441d070b1a2cfb6338ca1c9db74",
-  "release_url": "https://github.com/klize/forgotten-saga/releases/tag/v26.10.14.0101-beta.3"
+  "version": "26.10.14.0101-beta.4",
+  "game_version": "v26.10.14.0101-beta.4",
+  "loader_version": "v26.10.14.0101-beta.4",
+  "date": "2026-11-05",
+  "download_url": "https://github.com/klize/forgotten-saga/releases/download/v26.10.14.0101-beta.4/FSAGA_v26.10.14.0101-beta.4.zip",
+  "download_sha256": "a2dd42b4e64da1985ce3701028df08cc4965c4dfbcf4090e31514bafab4eef80",
+  "extension_dll_sha256": "b9f8915e256bd250bd802474e8895b66f2f72799af192cd82499f39daf32f510",
+  "hook_resource_dll_sha256": "af22c298beb2da84df034347e61d61f05aa83c8afaac08e100f12c88c0c2fcd0",
+  "inventory_expansion_dll_sha256": "be88cc315ff2adbf521eb8f23d4f8f198fe3124aeff59355a9e1f05331fe2b60",
+  "release_url": "https://github.com/klize/forgotten-saga/releases/tag/v26.10.14.0101-beta.4"
 }
